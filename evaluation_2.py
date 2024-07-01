@@ -1,6 +1,6 @@
 import math
 
-from utils import evaluate_policy, str2bool
+from utils_2 import evaluate_policy, str2bool
 from datetime import datetime
 from DQN import DQN_agent
 import gymnasium as gym
@@ -36,14 +36,14 @@ parser.add_argument('--Double', type=str2bool, default=True, help='Whether to us
 parser.add_argument('--Duel', type=str2bool, default=True, help='Whether to use Duel networks')
 
 parser.add_argument('--Lead_time', type=int, default=3, help='Lead time')
-parser.add_argument('--rho', type=float, default=-0.9, help='AR coefficient')
+parser.add_argument('--rho', type=float, default=-0.5, help='AR coefficient')
 parser.add_argument('--mu', type=float, default=20, help='AR average')
 parser.add_argument('--sigma', type=float, default=2, help='AR std')
-parser.add_argument('--seq_len', type=int, default=1000, help='Sequence length')
+parser.add_argument('--seq_len', type=int, default=100, help='Sequence length')
 parser.add_argument('--action_dim', type=int, default=40, help='Action dimension, num of admissible order quantity')
-parser.add_argument('--metric', type=int, default=3, help='idx of evaluation metric')
+parser.add_argument('--metric', type=int, default=4, help='idx of evaluation metric')
 parser.add_argument('--m', type=int, default=5, help='length of past demand vector')
-parser.add_argument('--col', type=int, default=1, help='whether collaboration exists. 0: No; 1: Yes')
+parser.add_argument('--col', type=int, default=0, help='whether collaboration exists. 0: No; 1: Yes')
 
 opt = parser.parse_args()
 opt.dvc = torch.device(opt.dvc) # from str to torch.device
@@ -57,8 +57,8 @@ def main():
     opt.state_dim = opt.Lead_time - 1 + 1 + 6  # WIP_dim: l-1, NS_dim: 1, demand_dim: 6
 
 
-    env = echelon.echelon(**vars(opt))
     eval_env = echelon.echelon(**vars(opt))
+    eval_env_2 = echelon.echelon_m(**vars(opt))
 
 
     #Algorithm Setting
@@ -89,10 +89,13 @@ def main():
     #Build model and replay buffer
     if not os.path.exists('model'): os.mkdir('model')
     agent = DQN_agent(**vars(opt))
-    if opt.Loadmodel: agent.load(algo_name,EnvName[opt.EnvIdex],"Opt",opt.rho, opt.metric, 1) # load the Opt model
+    agent_2 = DQN_agent(**vars(opt))
+    if opt.Loadmodel:
+        agent.load(algo_name,EnvName[opt.EnvIdex],"Opt",opt.rho, opt.metric, 1) # load the Opt model
+        agent_2.load(algo_name,EnvName[opt.EnvIdex],"Opt",opt.rho, opt.metric, 2) # load the Opt model
     # if opt.Loadmodel: agent.load(algo_name, EnvName[opt.EnvIdex], opt.ModelIdex, opt.rho) # load model by steps index
 
-    score = evaluate_policy(eval_env, agent, turns=100)
+    score = evaluate_policy(eval_env, agent, eval_env_2, agent_2, turns=100)
     print('EnvName:', EnvName[opt.EnvIdex], 'score:', score)
 
 
