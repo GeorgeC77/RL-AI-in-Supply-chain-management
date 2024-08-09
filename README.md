@@ -8,8 +8,10 @@ Considered Supply Chain Models:
 
 Evaluation Metrics:
 
-    1. Inventory Cost Only
-    2. Inventory Cost and Capacity Cost
+    1. Inventory Cost Only (single echelon)
+    2. Inventory Cost and Capacity Cost (single echelon)
+    3. Inventory Cost Only (two echelon)
+    4. Inventory Cost and Capacity Cost (two echelon)
 Instructions:
 
 For the single echelon case, run the script main.py.
