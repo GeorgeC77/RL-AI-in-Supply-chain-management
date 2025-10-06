@@ -3,16 +3,15 @@ This project involves training an AI using Reinforcement Learning (DQN) for inve
 
 Considered Supply Chain Models:
 
-    1. Single Echelon Supply Chain
+    1. Single Echelon Inventory Control
     2. Two-Echelon Supply Chain
 
 Evaluation Metrics:
 
-    1. Inventory Cost Only (single echelon)
-    2. Inventory Cost and Capacity Cost (single echelon)
-    3. Inventory Cost Only (two-echelon)
-    4. Inventory Cost and Capacity Cost (two-echelon)
+    1. Inventory Cost Only
+    2. Inventory Cost and Capacity Cost
+
 Instructions:
 
-For the single echelon case, run the script main.py.
-For the two echelon case, run the script main_2.py.
+For the single echelon case, run the script train.py.
+For the two echelon case, run the script train_two_stage.py.
